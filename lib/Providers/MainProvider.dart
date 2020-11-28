@@ -59,57 +59,17 @@ class MainProvider extends ChangeNotifier {
     String url =
         'http://appback.ppu.edu/menus/${selectedRestaurant.toString()}';
 
-    // try {
-    final response = await http.get(url);
-    final extractedData = json.decode(response.body) as List;
-    // if (extractedData['error'] != null || extractedData == null) return false;
-
-    List<MenuItem> newMenuItems =
-        extractedData.map((e) => MenuItem.fromJson(e)).toList();
-    _setMenuItems(newMenuItems);
-    print(extractedData);
-    // _setRestaurants(extractedData.map((e) => Restaurant.fromJson(e)).toList());
-    print('FETCHING MENUITEMS DATA SUCCESS!');
-    return true;
-    // } catch (e) {
-    //   print('ERROR FETCHING DATA !');
-    //   return false;
-    // }
-  }
-
-  Future<bool> fetchAndSetData() async {
-    const url =
-        'https://buthor-kids.com/weather_backend/weatherapp-backend/api/v1/home';
-
     try {
-      // final response = await http.get(url);
-      // final extractedData = json.decode(response.body);
-
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as List;
       // if (extractedData['error'] != null || extractedData == null) return false;
 
-      // await checkRegionData(extractedData['regions']);
-      // _setDetailedWeatherForecast(extractedData['detailed_weather']);
-      // _setMainWeatherDetails(extractedData);
-      // _setWhatToWearData(extractedData['whatweartommoro']);
-      // _setTenDaysForecast(extractedData);
-      // _setCurrencyExchangeList(extractedData['currency']);
-      // _setMoonStatus(extractedData['moonstatus']);
-      // _setEarthquaks(extractedData['earthquakes']);
-      // _setPrayers(extractedData['prayers']);
-      // _setRain(extractedData['rain']);
-      // _setAlerts(extractedData['notifications']);
-      // _setRegions(extractedData['regions']);
-      // _setNews(extractedData['mainnews']);
-      // _breakNews = extractedData['break_news'];
-      // if (_detailedWeatherForecast == null ||
-      //     _currencyExchangeList == null ||
-      //     _moonStatus == null ||
-      //     _regionWeatherDetails == null ||
-      //     _tenDaysForecast == null ||
-      //     _regionIndex == null ||
-      //     _breakNews == null) return false;
-
-      notifyListeners();
+      List<MenuItem> newMenuItems =
+          extractedData.map((e) => MenuItem.fromJson(e)).toList();
+      _setMenuItems(newMenuItems);
+      print(extractedData);
+      // _setRestaurants(extractedData.map((e) => Restaurant.fromJson(e)).toList());
+      print('FETCHING MENUITEMS DATA SUCCESS!');
       return true;
     } catch (error) {
       Fluttertoast.cancel();

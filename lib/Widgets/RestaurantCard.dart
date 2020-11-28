@@ -64,6 +64,9 @@ class RestaurantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       padding: EdgeInsets.all(10),
       child: Card(
@@ -72,7 +75,7 @@ class RestaurantCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
         child: Container(
           width: double.infinity,
-          height: 340,
+          height: screenHeight*0.45,
           // padding: EdgeInsets.all(20),
           child: InkWell(
             splashColor: Theme.of(context).accentColor,
@@ -83,11 +86,11 @@ class RestaurantCard extends StatelessWidget {
                   'http://appback.ppu.edu/static/' + this.image,
                   width: double.maxFinite,
                   fit: BoxFit.cover,
-                  height: 200,
+                  height: screenHeight*0.25,
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(screenHeight*0.01),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +103,7 @@ class RestaurantCard extends StatelessWidget {
                                 Row(
                                   children: [
                                     Icon(Icons.assignment),
-                                    SizedBox(width: 10),
+                                    SizedBox(width: screenHeight*0.01),
                                     Text(
                                       this.name,
                                       style:

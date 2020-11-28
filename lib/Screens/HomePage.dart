@@ -25,6 +25,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       drawerScrimColor: Theme.of(context).accentColor.withAlpha(50),
@@ -60,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                   } else if (snapshot.connectionState == ConnectionState.done)
                     return SingleChildScrollView(
                       child: Container(
-                        height: 680,
+                        height: screenHeight * 0.75,
                         child: ListView.builder(
                           itemCount: dataProvider.restaurants.length,
                           itemBuilder: (BuildContext context, int index) {

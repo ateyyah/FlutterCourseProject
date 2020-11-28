@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:FlutterCourseProject/Models/MenuItem.dart';
 import 'package:FlutterCourseProject/Providers/MainProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:provider/provider.dart';
 
-class MenuItemsCard extends StatelessWidget {
+class MenuItemsCard extends StatefulWidget {
   final int id;
   final String name;
   final String description;
@@ -15,51 +19,53 @@ class MenuItemsCard extends StatelessWidget {
   const MenuItemsCard({
     Key key,
     this.id,
-    this.name,
-    this.description,
-    this.price,
-    this.image,
-    this.rating,
+    this.name = 'ResName',
+    this.description = 'desc',
+    this.price = 0,
+    this.image = "",
+    this.rating = 0,
   }) : super(key: key);
 
-  // void onPressedCard(BuildContext context) {
-  //   print('Tapped restaurant card');
-  //   MainProvider.selectMenuItem(context, this.id);
-  //   MenuItem selectedRest =
-  //       Provider.of<MainProvider>(context, listen: false).findMenuItem(id);
+  @override
+  _MenuItemsCardState createState() => _MenuItemsCardState();
+}
 
-  //   AlertDialog alert = new AlertDialog(
-  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-  //     backgroundColor: Theme.of(context).primaryColorLight,
-  //     content: Container(
-  //       height: 300,
-  //       child: Column(
-  //         children: [
-  //           Text(
-  //             selectedRest.name,
-  //             style: Theme.of(context).textTheme.headline5,
-  //           ),
-  //           Text(selectedRest.phone),
-  //         ],
-  //       ),
-  //     ),
-  //     actions: [
-  //       FlatButton(
-  //         onPressed: () => Navigator.pop(context),
-  //         child: Text('Cancel'),
-  //       )
-  //     ],
-  //   );
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return alert;
-  //     },
-  //   );
-  // }
+bool isOrdered = false;
+bool isFavourite = false;
+
+class _MenuItemsCardState extends State<MenuItemsCard> {
+  @override
+  void initState() {
+    checkInfo();
+    super.initState();
+  }
+
+  checkInfo() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     if (!(prefs.containsKey('orderList')))
+//       await prefs.setString("orderList", "[]");
+//     print(prefs.getKeys());
+
+//     print("BLA BLA" + prefs.getString('orderList'));
+
+//     List<int> posts = List<int>.from(jsonDecode(prefs.getString('orderList')));
+// // List<int> posts = List<int>.from(prefs.getString('orderList')).map((Map model)=> int.fromJson(model)).toList();
+//     print("POSTS" + posts.toList().toString());
+//     List<int> orderList = jsonDecode(prefs.getString("orderList")).toList();
+//     if (orderList.contains(this.widget.id)) {
+//       isOrdered = true;
+//       setState(() {});
+//       return;
+//     } else
+//       isOrdered = false;
+//     setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       padding: EdgeInsets.all(10),
       child: Card(
@@ -68,18 +74,20 @@ class MenuItemsCard extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
         child: Container(
           width: double.infinity,
-          height: 500,
+          height: screenHeight*0.6,
           // padding: EdgeInsets.all(20),
           child: InkWell(
             splashColor: Theme.of(context).accentColor,
             onTap: () {}, //onPressedCard(context),
             child: Column(
               children: [
-                Image.network(
-                  'http://appback.ppu.edu/static/' + this.image,
+                FadeInImage(
+                  placeholder: AssetImage('assets/images/placeholder.png'),
+                  image: NetworkImage(
+                      'http://appback.ppu.edu/static/' + this.widget.image),
                   width: double.maxFinite,
                   fit: BoxFit.cover,
-                  height: 300,
+                  height: screenHeight*0.35,
                 ),
                 Expanded(
                   child: Container(
@@ -97,7 +105,7 @@ class MenuItemsCard extends StatelessWidget {
                                 Icon(Icons.assignment),
                                 SizedBox(width: 10),
                                 Text(
-                                  this.name,
+                                  this.widget.name,
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                               ],
@@ -105,7 +113,7 @@ class MenuItemsCard extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  this.price.toString(),
+                                  this.widget.price.toString(),
                                   style: TextStyle(
                                       color: Colors.grey[800], fontSize: 25),
                                 ),
@@ -122,25 +130,33 @@ class MenuItemsCard extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            FlatButton(
-                              onPressed: () {}, // onPressedCard(context),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.add_shopping_cart),
-                                  SizedBox(
-                                    width: 10,
+                            !isOrdered
+                                ? FlatButton(
+                                    onPressed:
+                                        _addToOrderList, // onPressedCard(context),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.add_shopping_cart),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('Order',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    color: Colors.black87)),
+                                      ],
+                                    ),
+                                    color: Colors.green[400],
+                                  )
+                                : Text(
+                                    'In OrderList',
+                                    style: TextStyle(color: Colors.grey),
                                   ),
-                                  Text('Order',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(color: Colors.black87)),
-                                ],
-                              ),
-                              color: Colors.green[400],
-                            ),
                             FlatButton(
-                              onPressed: () {}, // onPressedCard(context),
+                              onPressed:
+                                  _addToFavourites, // onPressedCard(context),
                               child: Row(
                                 children: [
                                   Icon(Icons.favorite),
@@ -162,7 +178,7 @@ class MenuItemsCard extends StatelessWidget {
                           children: [
                             Center(
                               child: RatingBar.builder(
-                                initialRating: this.rating / 2,
+                                initialRating: this.widget.rating / 2,
                                 minRating: 1,
                                 ignoreGestures: true,
                                 direction: Axis.horizontal,
@@ -196,5 +212,31 @@ class MenuItemsCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _addToOrderList() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // List<int> orderList = jsonDecode(prefs.getString("orderList"));
+    // if (orderList.contains(this.widget.id)) {
+    //   isOrdered = true;
+    //   setState(() {});
+    //   return;
+    // }
+    // orderList.add(this.widget.id);
+    // await prefs.setString('orderList', jsonEncode(orderList));
+    // setState(() {});
+  }
+
+  _addToFavourites() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // List<int> favouritesList = jsonDecode(prefs.getString("favouritesList"));
+    // if (favouritesList.contains(this.widget.id)) {
+    //   isFavourite = true;
+    //   setState(() {});
+    //   return;
+    // }
+    // favouritesList.add(this.widget.id);
+    // await prefs.setString('favouritesList', jsonEncode(favouritesList));
+    // setState(() {});
   }
 }
