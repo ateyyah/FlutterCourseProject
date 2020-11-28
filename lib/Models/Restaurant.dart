@@ -20,10 +20,6 @@ class Restaurant {
   });
 
   factory Restaurant.fromJson(dynamic jsonObject) {
-    // var resturants = jsonObject['products'] as List;
-    // List<Restaurant> _restaurants =
-    //     prds.map((element) => Restaurant.fromJson(element)).toList();
-
     return Restaurant(
       id: jsonObject['id'],
       name: jsonObject['name'],

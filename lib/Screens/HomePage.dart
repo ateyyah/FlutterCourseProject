@@ -15,47 +15,61 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  MainProvider dataProvider;
   @override
   void initState() {
     super.initState();
-    context.read<MainProvider>().initalLoad();
+    dataProvider = context.read<MainProvider>();
+    // context.read<MainProvider>().initalLoad();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MainProvider>(
-      builder: (context, value, child) => Scaffold(
-        appBar: AppBar(
-          title: Text('TALABAT'),
-        ),
-        endDrawer: MainpageDrawer(),
-        body: Container(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('TALABAT'),
+      ),
+      endDrawer: MainpageDrawer(),
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
                 "Avaliable Restaurants:",
                 style: Theme.of(context).textTheme.headline4,
               ),
-              SingleChildScrollView(
-                child: Container(
-                  height: 700,
-                  child: ListView.builder(
-                    itemCount: value.restaurants.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return RestaurantCard(
-                        name: value.restaurants[index].name,
-                        city: value.restaurants[index].city,
-                        image: value.restaurants[index].image,
-                        rating: value.restaurants[index].rating,
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+            FutureBuilder(
+                future:
+                    // context.watch<MainProvider>().fetchRestaurantsData(),
+                    Provider.of<MainProvider>(context).fetchRestaurantsData(),
+                builder: (context, snapshot) {
+                  print(snapshot.connectionState);
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.connectionState == ConnectionState.done)
+                    return SingleChildScrollView(
+                      child: Container(
+                        height: 680,
+                        child: ListView.builder(
+                          itemCount: dataProvider.restaurants.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return RestaurantCard(
+                              name: dataProvider.restaurants[index].name,
+                              city: dataProvider.restaurants[index].city,
+                              image: dataProvider.restaurants[index].image,
+                              rating: dataProvider.restaurants[index].rating,
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  return null;
+                })
+          ],
         ),
       ),
     );
