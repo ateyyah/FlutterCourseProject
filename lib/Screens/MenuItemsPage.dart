@@ -1,20 +1,21 @@
 import 'package:FlutterCourseProject/Providers/MainProvider.dart';
 import 'package:FlutterCourseProject/Widgets/Drawer.dart';
+import 'package:FlutterCourseProject/Widgets/MenuItemCard.dart';
 import 'package:FlutterCourseProject/Widgets/RestaurantCard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  static const routeName = '/main_page';
+class MenuItemsPage extends StatefulWidget {
+  static const routeName = '/menu_items_page';
 
   final String title;
 
-  HomePage({Key key, this.title}) : super(key: key);
+  MenuItemsPage({Key key, this.title}) : super(key: key);
   @override
-  _HomePageState createState() => _HomePageState();
+  _MenuItemsPageState createState() => _MenuItemsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MenuItemsPageState extends State<MenuItemsPage> {
   MainProvider dataProvider;
   @override
   void initState() {
@@ -30,13 +31,13 @@ class _HomePageState extends State<HomePage> {
       drawerScrimColor: Theme.of(context).accentColor.withAlpha(50),
       appBar: AppBar(
         title: Text(
-          'TALABAT',
+          'Menu Items',
           style: TextStyle(color: Colors.black87),
         ),
         iconTheme: IconThemeData(color: Colors.black87),
         backgroundColor: Theme.of(context).primaryColorLight,
       ),
-      endDrawer: MainpageDrawer(),
+      // endDrawer: MainpageDrawer(),
       body: Container(
         width: double.infinity,
         child: Column(
@@ -45,14 +46,14 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(
-                "Avaliable Restaurants:",
+                "List of Items:",
                 style: Theme.of(context).textTheme.headline4,
               ),
             ),
             FutureBuilder(
                 future:
                     // context.watch<MainProvider>().fetchRestaurantsData(),
-                    Provider.of<MainProvider>(context).fetchRestaurantsData(),
+                    Provider.of<MainProvider>(context).fetchMenuItemData(),
                 builder: (context, snapshot) {
                   print(snapshot.connectionState);
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -62,20 +63,22 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         height: 680,
                         child: ListView.builder(
-                          itemCount: dataProvider.restaurants.length,
+                          itemCount: dataProvider.menuItems.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return RestaurantCard(
-                              id: dataProvider.restaurants[index].id,
-                              name: dataProvider.restaurants[index].name,
-                              city: dataProvider.restaurants[index].city,
-                              image: dataProvider.restaurants[index].image,
-                              rating: dataProvider.restaurants[index].rating,
+                            return MenuItemsCard(
+                              id: dataProvider.menuItems[index].id,
+                              name: dataProvider.menuItems[index].name,
+                              description:
+                                  dataProvider.menuItems[index].description,
+                              image: dataProvider.menuItems[index].image,
+                              price: dataProvider.menuItems[index].price,
+                              rating: dataProvider.menuItems[index].rating,
                             );
                           },
                         ),
                       ),
                     );
-                  return null;
+                  return Text("Check your Connection !");
                 })
           ],
         ),

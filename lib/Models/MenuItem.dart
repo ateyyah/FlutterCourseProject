@@ -5,10 +5,10 @@ class MenuItem {
   final int restId;
   final String name;
   final String description;
-  final double price;
+  final int price;
   final String image;
-  final String rating;
-
+  final int rating;
+//2.	menu item name, description, price, image, rating.
   MenuItem({
     this.id,
     this.restId,
@@ -22,12 +22,12 @@ class MenuItem {
   factory MenuItem.fromJson(dynamic jsonObject) {
     return MenuItem(
       id: jsonObject['id'],
-      restId: jsonObject['restId'],
+      restId: jsonObject['rest_Id'],
       name: jsonObject['name'],
       description: jsonObject['descr'],
       price: jsonObject['price'],
       image: jsonObject['image'],
-      rating: jsonObject['rating'],
+      rating: jsonObject['rating'] != null ? jsonObject['rating'] : 0,
     );
   }
 }
